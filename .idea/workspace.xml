@@ -97,6 +97,14 @@
       <workItem from="1579162124582" duration="1906000" />
       <workItem from="1579164042118" duration="2318000" />
       <workItem from="1579166374365" duration="1926000" />
+      <workItem from="1579168312127" duration="1450000" />
+      <workItem from="1579170372062" duration="720000" />
+      <workItem from="1579175920412" duration="1154000" />
+      <workItem from="1579178727213" duration="1783000" />
+      <workItem from="1579181576826" duration="1582000" />
+      <workItem from="1579183384730" duration="1794000" />
+      <workItem from="1579185194891" duration="1804000" />
+      <workItem from="1579187010757" duration="114000" />
     </task>
     <servers />
   </component>
@@ -121,14 +129,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/json_inject.js</url>
-          <line>170</line>
-          <properties lambdaOrdinal="-1" />
+          <line>168</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/json_inject.js</url>
-          <line>179</line>
-          <properties lambdaOrdinal="-1" />
+          <line>177</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

@@ -196,6 +196,12 @@ let fluxAdvanced = {
                                 fluxAdvanced.like(parent.children[1].innerText + "-" + parent.children[2].innerText);
                             });
                             playlistTag.prepend($(listItemsList).children());
+                            let wrapper_div = playlistTag.parent();
+                            if(wrapper_div[0].className.indexOf("active_playlist")==-1){
+                                let movable_playlist_div = wrapper_div.parent();
+                                let playlistswrapper_div = movable_playlist_div.parent();
+                                playlistswrapper_div.prepend(movable_playlist_div);
+                            }
                             fluxAdvanced.alreadyAddedToPlaylist.push(playlistTrackId);
                         }
                         let station = $(plitems[0]).parent().parent().parent();
@@ -644,6 +650,7 @@ let fluxAdvanced = {
         head.appendChild(s);
     },
 
+
     countTime: function () {
         let list = $('meter');
         for (let i = 0; i < list.length; i++) {
@@ -656,6 +663,9 @@ let fluxAdvanced = {
         }
 
     },
+    /*#fluxplaylistsLeft*/
+
+
     getPlaylistIdByName: function (name) {
         let stations = fluxAdvanced.playerStations;
         let index = null;
@@ -804,7 +814,7 @@ fluxAdvanced.addCss(`   .playlist{
       box-sizing: border-box;
   }
   li.playlist:first-child {
-    font-size: 22px;
+    font-size: 20px;
     box-sizing: border-box;
     height: 150px;
     display: table-cell;
@@ -869,9 +879,12 @@ fluxAdvanced.addCss(`   .playlist{
     margin-top: 6px;
     margin-left: 300px;
 }
-
 span.artist {
    
+}
+span.track {
+    text-shadow: 0px 1px 1px #a7828e;
+    color: #FFEB3B;
 }
 .time {
     
@@ -888,6 +901,46 @@ span.artist {
     height: 150px;
     
 }
-.stationLink
-#playlist_event03 > li:nth-child(1) > div
+/*optimal value*/
+/* Chrome, Safari */
+meter::-webkit-meter-optimum-value {
+  background: linear-gradient(to bottom, #ee5f5b, #bd362f );
+}
+/* Firefox */
+meter::-moz-meter-bar {
+  background: linear-gradient(to bottom, #ee5f5b, #bd362f );
+}
+
+/*sub optimal value*/
+
+/* Chrome, Safari */
+meter::-webkit-meter-suboptimum-value {
+  background-color: orange;
+}
+/* Firefox */
+meter::-moz-meter-sub-optimum {
+  background-color: orange;
+}
+
+meter::-webkit-meter-bar {
+    background: #FFF;
+}
+
+
+meter::-webkit-meter-optimum-value {
+    background: linear-gradient(to bottom, #ee5f5b, #bd362f );
+}
+
+meter::-webkit-meter-even-less-good-value {
+    background: linear-gradient(to bottom, #62c462, #51a351);
+}
+
+/* Chrome, Safari */
+meter::-webkit-meter-even-less-good-value {
+  background-color: red;
+}
+/* Firefox */
+meter::-moz-meter-sub-sub-optimum {
+  background-color: red;
+}
 `);
