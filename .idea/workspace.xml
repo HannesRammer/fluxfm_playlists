@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29b87fa0-3eed-42f5-acbc-a0ce3c89a066" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/json_inject.js" beforeDir="false" afterPath="$PROJECT_DIR$/json_inject.js" afterDir="false" />
     </list>
@@ -95,7 +94,9 @@
       <workItem from="1579155526732" duration="1456000" />
       <workItem from="1579158408783" duration="1896000" />
       <workItem from="1579160316773" duration="1796000" />
-      <workItem from="1579162124582" duration="1215000" />
+      <workItem from="1579162124582" duration="1906000" />
+      <workItem from="1579164042118" duration="2318000" />
+      <workItem from="1579166374365" duration="1926000" />
     </task>
     <servers />
   </component>
@@ -114,5 +115,23 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/json_inject.js</url>
+          <line>170</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/json_inject.js</url>
+          <line>179</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

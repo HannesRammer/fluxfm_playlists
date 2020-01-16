@@ -127,12 +127,12 @@ let fluxAdvanced = {
                                <span class="track">${item.title}</span>
                                <br>
                                 <!--TODO add like dislike button-->
-                               
-                            </div>
-                            <div >
-                        <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
+                            <div>   <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
                             <span class="like_button liked_text"><i class="far fa-heart"></i></span>
-                            <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span></div>`;
+                            <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span>
+                            </div></div>
+                            
+                            `;
 
                             listItemsList.appendChild(listItem);
                         }
@@ -170,25 +170,27 @@ let fluxAdvanced = {
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
                                 console.log("hideStation");
-                                let parent = this.parentElement;
+                                let parent = this.parentElement.parentElement;
                                 let wrapper_div = $(parent.parentElement.parentElement.parentElement)[0];
                                 $(wrapper_div).toggleClass("hidden");
                                 fluxAdvanced.hide_station($(wrapper_div).attr('rel'));
                             });
                             $(plitems.find(".dislike_button")).click(function (event) {
+
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
                                 console.log("dislike");
-                                let parent = this.parentElement;
+                                let parent = this.parentElement.parentElement;
                                 $(parent.parentElement).toggleClass("disliked");
                                 $(parent.parentElement).removeClass("liked");
                                 fluxAdvanced.dislike(parent.children[1].innerText + "-" + parent.children[2].innerText);
                             });
                             $(plitems.find(".like_button")).click(function (event) {
+
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
                                 console.log("like");
-                                let parent = this.parentElement;
+                                let parent = this.parentElement.parentElement;
                                 $(parent.parentElement).toggleClass("liked");
                                 $(parent.parentElement).removeClass("disliked");
                                 fluxAdvanced.like(parent.children[1].innerText + "-" + parent.children[2].innerText);
@@ -788,6 +790,7 @@ fluxAdvanced.addCss(`   .playlist{
 .wrapper ul li {
     margin: 0px;
     color: #fff;
+     position: relative;
 }
   .boxShadow{
     box-shadow : 0px 0px 18px #2daebf;
@@ -877,4 +880,14 @@ span.artist {
     box-sizing: border-box;
     padding: 10px;
 }
+.plitem {
+    box-sizing: border-box;
+    padding: 10px;
+}
+ li..plitem:first-child {
+    height: 150px;
+    
+}
+.stationLink
+#playlist_event03 > li:nth-child(1) > div
 `);
