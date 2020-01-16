@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="102af6d1-b13d-4510-ae8e-e3b728debd7b" name="Default Changelist" comment="" />
+    <list default="true" id="29b87fa0-3eed-42f5-acbc-a0ce3c89a066" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/json_inject.js" beforeDir="false" afterPath="$PROJECT_DIR$/json_inject.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectId" id="1WQzGJxSpC1IMVpCumj3Bwwx5uC" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1WSQfBJCecDJxvDnuLfR8EspQPh" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -72,18 +80,39 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="102af6d1-b13d-4510-ae8e-e3b728debd7b" name="Default Changelist" comment="" />
-      <created>1579096509328</created>
+      <changelist id="29b87fa0-3eed-42f5-acbc-a0ce3c89a066" name="Default Changelist" comment="" />
+      <created>1579140616351</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1579096509328</updated>
-      <workItem from="1579096511919" duration="1176000" />
-      <workItem from="1579117381266" duration="1574000" />
-      <workItem from="1579137461418" duration="1928000" />
+      <updated>1579140616351</updated>
+      <workItem from="1579140617569" duration="1997000" />
+      <workItem from="1579143257657" duration="1789000" />
+      <workItem from="1579145058715" duration="2022000" />
+      <workItem from="1579147179899" duration="1828000" />
+      <workItem from="1579149032911" duration="626000" />
+      <workItem from="1579152757022" duration="1428000" />
+      <workItem from="1579154955944" duration="560000" />
+      <workItem from="1579155526732" duration="1456000" />
+      <workItem from="1579158408783" duration="1896000" />
+      <workItem from="1579160316773" duration="1796000" />
+      <workItem from="1579162124582" duration="1215000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

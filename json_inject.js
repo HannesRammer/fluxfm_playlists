@@ -40,6 +40,7 @@ let fluxAdvanced = {
     //Like dislike
     likes: [],
     dislikes: [],
+    hidden_stations: [],
     alertme: function () {
         alert(1);
     },
@@ -122,14 +123,17 @@ let fluxAdvanced = {
                             listItem.className = "playlist ";
                             listItem.innerHTML = `<div class="plitem">
                                <span class="time">${item.time}</span>
-                               <span class="artist">${item.artist}</span> -
+                               <span class="artist">${item.artist}</span> 
                                <span class="track">${item.title}</span>
                                <br>
-<!--TODO add like dislike button-->
-                               <span class="like_button hideChannel_text"><i class="far fa-eye-slash"></i></span> 
-                               <span class="like_button liked_text"><i class="far fa-heart"></i></span> 
-                               <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span>
-                            </div>`;
+                                <!--TODO add like dislike button-->
+                               
+                            </div>
+                            <div >
+                        <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
+                            <span class="like_button liked_text"><i class="far fa-heart"></i></span>
+                            <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span></div>`;
+
                             listItemsList.appendChild(listItem);
                         }
 
@@ -149,20 +153,6 @@ let fluxAdvanced = {
                         let seconds = parseInt(difference / 1000);
                         let playedTime = $.format.date(difference, 'mm:ss');
 
-                        for (let i = 0; i < plitems.length; i++) {
-                            let item = $(plitems[i]);
-                            let artist = item.children(".artist")[0].innerText;
-                            let track = item.children(".track")[0].innerText;
-                            let fullTrack = artist + "-" + track;
-                            if (fluxAdvanced.likes.indexOf(fullTrack) > -1) {
-                                item.parent().addClass("liked");
-                            }
-                            if (fluxAdvanced.dislikes.indexOf(fullTrack) > -1) {
-                                item.parent().addClass("disliked");
-                            }
-                        }
-
-
                         if (fluxAdvanced.alreadyAddedToPlaylist.indexOf(playlistTrackId) === -1) {
 
                             playlistTag.scrollTop = 0;
@@ -176,6 +166,15 @@ let fluxAdvanced = {
                             }
 
                             let plitems = $(listItemsList.querySelectorAll(".plitem"));
+                            $(plitems.find(".hide_station_button")).click(function (event) {
+                                event.stopImmediatePropagation();
+                                event.preventDefault();
+                                console.log("hideStation");
+                                let parent = this.parentElement;
+                                let wrapper_div = $(parent.parentElement.parentElement.parentElement)[0];
+                                $(wrapper_div).toggleClass("hidden");
+                                fluxAdvanced.hide_station($(wrapper_div).attr('rel'));
+                            });
                             $(plitems.find(".dislike_button")).click(function (event) {
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
@@ -197,6 +196,27 @@ let fluxAdvanced = {
                             playlistTag.prepend($(listItemsList).children());
                             fluxAdvanced.alreadyAddedToPlaylist.push(playlistTrackId);
                         }
+                        let station = $(plitems[0]).parent().parent().parent();
+                        let stationName = station.attr('rel');
+                        if (fluxAdvanced.hidden_stations.indexOf(stationName) > -1) {
+                            station.toggleClass("hidden");
+                        }
+                        for (let i = 0; i < plitems.length; i++) {
+                            let item = $(plitems[i]);
+                            let artist = item.children(".artist")[0].innerText;
+                            let track = item.children(".track")[0].innerText;
+                            let fullTrack = artist + "-" + track;
+
+
+                            if (fluxAdvanced.likes.indexOf(fullTrack) > -1) {
+                                item.parent().addClass("liked");
+                            }
+                            if (fluxAdvanced.dislikes.indexOf(fullTrack) > -1) {
+                                item.parent().addClass("disliked");
+                            }
+
+
+                        }
 
                     }
                     //let text = request.responseText;
@@ -216,6 +236,10 @@ let fluxAdvanced = {
             // Notify that we saved.
             console.log('dislikes updated');
         });
+        chrome.storage.sync.set({'hidden_stations': fluxAdvanced.hidden_stations}, function () {
+            // Notify that we saved.
+            console.log('hidden stations updated');
+        });
     },
     load: function () {
         chrome.storage.sync.get('likes', function (value) {
@@ -233,6 +257,14 @@ let fluxAdvanced = {
                 fluxAdvanced.dislikes = value.dislikes;
             }
             console.log('dislikes loaded');
+        });
+        chrome.storage.sync.get('hidden_stations', function (value) {
+            if (value.hidden_stations === undefined) {
+                fluxAdvanced.hidden_stations = [];
+            } else {
+                fluxAdvanced.hidden_stations = value.hidden_stations;
+            }
+            console.log('hidden stations loaded');
         });
 
     },
@@ -468,6 +500,24 @@ let fluxAdvanced = {
         return id;
     },
 
+    like: function (title) {
+        let dislikes = fluxAdvanced.dislikes;
+        let likes = fluxAdvanced.likes;
+
+        console.log("like - " + title);
+        if (fluxAdvanced.isLiked(title)) {
+            let indexD = likes.indexOf(title);
+            likes.splice(indexD, 1);
+        } else {
+            likes.push(title);
+            if (fluxAdvanced.isDisliked(title)) {
+                let index = dislikes.indexOf(title);
+                dislikes.splice(index, 1);
+            }
+        }
+        fluxAdvanced.store();
+    },
+
     dislike: function (title) {
         let dislikes = fluxAdvanced.dislikes;
         let likes = fluxAdvanced.likes;
@@ -486,23 +536,18 @@ let fluxAdvanced = {
         fluxAdvanced.checkCurrentTitle();
     },
 
-    like: function (title) {
-        let dislikes = fluxAdvanced.dislikes;
-        let likes = fluxAdvanced.likes;
-
-        console.log("like - " + title);
-        if (fluxAdvanced.isLiked(title)) {
-            let indexD = likes.indexOf(title);
-            likes.splice(indexD, 1);
+    hide_station: function (station) {
+        let hidden_stations = fluxAdvanced.hidden_stations;
+        console.log("hide station - " + station);
+        if (fluxAdvanced.isHidden(station)) {
+            let indexD = hidden_stations.indexOf(station);
+            hidden_stations.splice(indexD, 1);
         } else {
-            likes.push(title);
-            if (fluxAdvanced.isDisliked(title)) {
-                let index = dislikes.indexOf(title);
-                dislikes.splice(index, 1);
-            }
+            hidden_stations.push(station);
         }
         fluxAdvanced.store();
     },
+
     checkTitleFromPlaylistIsLiked: function (id) {
         let title = fluxAdvanced.getArtistFromPlaylist(id) + "-" + fluxAdvanced.getTitleFromPlaylist(id);
         return fluxAdvanced.isLiked(title);
@@ -510,6 +555,9 @@ let fluxAdvanced = {
     checkTitleFromPlaylistIsDisliked: function (id) {
         let title = fluxAdvanced.getArtistFromPlaylist(id) + "-" + fluxAdvanced.getTitleFromPlaylist(id);
         return fluxAdvanced.isDisliked(title);
+    },
+    isHidden: function (title) {
+        return (fluxAdvanced.hidden_stations.indexOf(title) > -1);
     },
     isDisliked: function (title) {
         return (fluxAdvanced.dislikes.indexOf(title) > -1);
@@ -639,6 +687,7 @@ $(document).ready(function () {
         fluxAdvanced.countTime();
     }, 1000);
 
+
 });
 console.log("start2");
 fluxAdvanced.addStyle();
@@ -647,9 +696,10 @@ fluxAdvanced.addCss(`   .playlist{
 
    }
    .playlistswrapper{
-      position: absolute;
-      width: 600px;
-      height: 500px;
+        position: absolute;
+    width: 783px;
+    height: 794px;
+    top: -95px;
    }
 
 
@@ -666,7 +716,7 @@ fluxAdvanced.addCss(`   .playlist{
       visibility: hidden;
    }
    #fluxplaylistsLeft{
-         left: -600px;
+         left: -770px;
    }
    #fluxplaylistsLeft .wrapper{
 
@@ -679,56 +729,57 @@ fluxAdvanced.addCss(`   .playlist{
 
 
    }
-   .active_playlist_l{
-     left:600px;
-     top:400px;
-     position:absolute !important;
-   }
+  .active_playlist_l {
+    left: 805px;
+    top: 510px;
+    position: absolute !important;
+}
 
    .active_playlist_r{
-     left:-315px;
-     top:400px;
-     position:absolute !important;
+     left: -295px;
+    top: 510px;
+    position: absolute !important;
    }
    .wrapper {
-      height: 85px;
-      border: 2px solid #00000000;
-      transition:boxShadow 0.5s, top 2s, left 2s;
-       box-shadow : none;
-       float:left;
-       width:49% ;
-       position: relative;
-       overflow:hidden;
+      height: 150px;
+    border: 2px solid #00000000;
+    transition: boxShadow 0.5s, top 2s, left 2s;
+    box-shadow: none;
+    float: left;
+    width: 32%;
+    position: relative;
+    overflow: hidden;
   }
   .wrapper ul {
-      text-align: left;
-      list-style: none;
-      font-size: 11px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      height:80px;
-      margin:0;
-  }
-  .station{
-        text-align: center;
-      color:yellow;
-      font-size: 15px;
-      position: absolute;
-      z-index: 2;
-      height:4px;
-      top:60px;
-      left:5px;
-  }
+    text-align: left;
+    list-style: none;
+    font-size: 11px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 150px;
+    margin: 0;
+}
+  .station {
+    text-align: center;
+    color: yellow;
+    font-size: 15px;
+    position: absolute;
+    z-index: 2;
+    height: 4px;
+    top: 125px;
+    left: 5px;
+}
 
 .playedTime {
     text-align: center;
     position: absolute;
     z-index: 2;
-    margin-left: 238px;
+    left: 190px;
     color: yellow;
-    padding-top: 60px;
-    top:0px !important;
-    font-size:15px;
+    top: 125px !important;
+    font-size: 15px;
+    width: 40px;
+    height: 20px;
 }
 .wrapper ul {
     cursor: pointer;
@@ -736,11 +787,7 @@ fluxAdvanced.addCss(`   .playlist{
 }
 .wrapper ul li {
     margin: 0px;
-    padding-left: 10px;
-
-    padding-bottom: 3px;
     color: #fff;
-    background-color: #818181;
 }
   .boxShadow{
     box-shadow : 0px 0px 18px #2daebf;
@@ -754,13 +801,13 @@ fluxAdvanced.addCss(`   .playlist{
       box-sizing: border-box;
   }
   li.playlist:first-child {
-      font-size: 17px;
-      box-sizing: border-box;
-      height: 80px;
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
-  }
+    font-size: 22px;
+    box-sizing: border-box;
+    height: 150px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
   li.playlist:first-child .plitem span {
       position: relative;
       text-align: center;
@@ -784,11 +831,14 @@ fluxAdvanced.addCss(`   .playlist{
        top: 240px !important;
       left: -325px !important;
    }
-  .liked{
+   .liked{
      background: #008000ad  !important;
    }
    .disliked{
      background: #ff000057  !important;
+   }
+  .hidden{
+     display:none;
    }
    .liked_text:hover{
      color:green !important;
@@ -796,11 +846,18 @@ fluxAdvanced.addCss(`   .playlist{
    .disliked_text:hover{
      color:red !important;
    }
+   .hide_station_text:hover{
+     color:gray !important;
+   }
+   .like_button{
+   top:10px;
+   left:70px;
+   }
    .dislike_button{
    top:10px;
    left:70px;
    }
-   .like_button{
+   .hide_station_button{
    top:10px;
    left:70px;
    }
@@ -808,4 +865,16 @@ fluxAdvanced.addCss(`   .playlist{
     text-align: center;
     margin-top: 6px;
     margin-left: 300px;
-}`);
+}
+
+span.artist {
+   
+}
+.time {
+    
+}
+.plitem {
+    box-sizing: border-box;
+    padding: 10px;
+}
+`);
