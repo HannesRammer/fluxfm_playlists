@@ -4,6 +4,7 @@
     <list default="true" id="29b87fa0-3eed-42f5-acbc-a0ce3c89a066" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/json_inject.js" beforeDir="false" afterPath="$PROJECT_DIR$/json_inject.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +22,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RunDashboard">
@@ -104,7 +106,13 @@
       <workItem from="1579181576826" duration="1582000" />
       <workItem from="1579183384730" duration="1794000" />
       <workItem from="1579185194891" duration="1804000" />
-      <workItem from="1579187010757" duration="114000" />
+      <workItem from="1579187010757" duration="1136000" />
+      <workItem from="1579190362208" duration="720000" />
+      <workItem from="1579194657967" duration="603000" />
+      <workItem from="1579197149737" duration="1365000" />
+      <workItem from="1579200706786" duration="1857000" />
+      <workItem from="1579202716657" duration="1818000" />
+      <workItem from="1579204665080" duration="604000" />
     </task>
     <servers />
   </component>
@@ -129,13 +137,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/json_inject.js</url>
-          <line>168</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/json_inject.js</url>
           <line>177</line>
-          <option name="timeStamp" value="4" />
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -54,26 +54,26 @@ let fluxAdvanced = {
     },
     getConvertedStreamName: function (name) {
 
-        if (name == "fluxfm") {
+        if (name === "fluxfm") {
             name = "berlin";
         }
-        if (name == "soundofberlin") {
+        if (name === "soundofberlin") {
             name = "berlinsound";
         }
-        if (name == "elektroflux") {
+        if (name === "elektroflux") {
             name = "electroflux";
         }
         return name;
     },
     revertConvertedStreamName: function (name) {
 
-        if (name == "berlin") {
+        if (name === "berlin") {
             name = "fluxfm";
         }
-        if (name == "berlinsound") {
+        if (name === "berlinsound") {
             name = "soundofberlin";
         }
-        if (name == "electroflux") {
+        if (name === "electroflux") {
             name = "elektroflux";
         }
         return name;
@@ -107,7 +107,7 @@ let fluxAdvanced = {
                 alert('Woops, there was an error making the request.');
             };
             request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
+                if (request.readyState === 4 && request.status === 200) {
                     let data = JSON.parse(request.responseText);
                     let playlistName = requestUrl.split("loc=")[1];
                     let id = "playlist_" + playlistName;
@@ -197,7 +197,7 @@ let fluxAdvanced = {
                             });
                             playlistTag.prepend($(listItemsList).children());
                             let wrapper_div = playlistTag.parent();
-                            if(wrapper_div[0].className.indexOf("active_playlist")==-1){
+                            if (wrapper_div[0].className.indexOf("active_playlist") ===-1) {
                                 let movable_playlist_div = wrapper_div.parent();
                                 let playlistswrapper_div = movable_playlist_div.parent();
                                 playlistswrapper_div.prepend(movable_playlist_div);
@@ -891,12 +891,9 @@ span.track {
 }
 .plitem {
     box-sizing: border-box;
-    padding: 10px;
+    padding: 5px;
 }
-.plitem {
-    box-sizing: border-box;
-    padding: 10px;
-}
+
  li..plitem:first-child {
     height: 150px;
     
