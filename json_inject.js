@@ -1,4 +1,11 @@
 let fluxAdvanced = {
+    idFluxPlaylistsLeft:  "fluxplaylistsLeft",
+classPlayListsWrapper:  "playlistswrapper",
+classPlaylist:  "playlist",
+classPlayedTime: "playedTime",
+classPLItem: "plitem",
+    classActivePlaylistL : "active_playlist_l_short",
+    classActivePlaylistR : "active_playlist_r_short",
     stationDivider: 0,
     loadPlaylist: function () {
         let lists = document.querySelectorAll("#channelsscroller a");
@@ -120,8 +127,7 @@ let fluxAdvanced = {
                             let listItem = document.createElement("li");
                             let item = data.tracks[i];
                             listItem.setAttribute("playlistid", item.id);
-                            listItem.className = "playlist ";
-                            listItem.innerHTML = `<div class="plitem">
+                            listItem.innerHTML = `<div class="${fluxAdvanced.classPLItem}">
                                <span class="time">${item.time}</span>
                                <span class="artist">${item.artist}</span> 
                                <span class="track">${item.title}</span>
@@ -133,11 +139,12 @@ let fluxAdvanced = {
                             </div></div>
                             
                             `;
+                            listItem.className = fluxAdvanced.classPlaylist+" ";
 
                             listItemsList.appendChild(listItem);
                         }
 
-                        let plitems = $(listItemsList).find(".plitem");
+                        let plitems = $(listItemsList).find("."+fluxAdvanced.classPLItem);
                         let time = "00:00:00";
                         let date = "2018-07-15";
                         let playlistTrackId = "";
@@ -165,7 +172,7 @@ let fluxAdvanced = {
                                 meterDiv.max = 300;
                             }
 
-                            let plitems = $(listItemsList.querySelectorAll(".plitem"));
+                            let plitems = $(listItemsList.querySelectorAll("."+fluxAdvanced.classPLItem));
                             $(plitems.find(".hide_station_button")).click(function (event) {
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
@@ -294,9 +301,9 @@ let fluxAdvanced = {
         let classname = "wrapper";
         if (fluxAdvanced.isActive(i) === "true") {
             if (i < fluxAdvanced.stationDivider) {
-                classname += " active_playlist_l";
+                classname += " "+fluxAdvanced.classActivePlaylistL;
             } else {
-                classname += " active_playlist_r";
+                classname += " "+fluxAdvanced.classActivePlaylistR
             }
         }
         let v = 0;
@@ -307,7 +314,7 @@ let fluxAdvanced = {
         div.innerHTML = `<div class="${classname}" id="playlistWrapper${(i)}" rel="${stationName}" >
             <meter max="300" min="0" value="240" high="270" low="215" optimum="1802" 
             style="position: absolute;z-index: 1;width: 100%;height: 4px;"></meter>
-              <div class="playedTime"></div>
+              <div class="${fluxAdvanced.classPlayedTime}"></div>
               <ul class="stationLink" id="playlist_${stationName}" style="padding:0;" rel="${stationName}"></ul>
               
                         <div class="station" rel="${stationName}" >${fluxAdvanced.revertConvertedStreamName(fluxAdvanced.locList[i])}</div>
@@ -346,7 +353,25 @@ let fluxAdvanced = {
         }
     },
     initiateView: function () {
-        window.resizeTo(1300, 768);
+        if($("body").width() > 1400){
+        fluxAdvanced.idFluxPlaylistsLeft = "fluxplaylistsLeft";
+            fluxAdvanced.classPlayListsWrapper = "playlistswrapper";
+            fluxAdvanced.classPlaylist = "playlist";
+            fluxAdvanced.classPlayedTime ="playedTime";
+            fluxAdvanced.classPLItem ="plitem";
+            fluxAdvanced.classActivePlaylistL = "active_playlist_l";
+            fluxAdvanced.classActivePlaylistR = "active_playlist_r";
+        }else{
+            fluxAdvanced.idFluxPlaylistsLeft = "fluxplaylistsLeft_short";
+            fluxAdvanced.classPlayListsWrapper = "playlistswrapper_short";
+            fluxAdvanced.classPlaylist = "playlist_short";
+            fluxAdvanced.classPlayedTime ="playedTime_short";
+            fluxAdvanced.classPLItem ="plitem_short";
+            fluxAdvanced.classActivePlaylistL = "active_playlist_l_short";
+            fluxAdvanced.classActivePlaylistR = "active_playlist_r_short";
+            window.resizeTo(1300, 768);
+        }
+
         fluxAdvanced.load();
 
         let length = fluxAdvanced.playerStations.length;
@@ -354,11 +379,13 @@ let fluxAdvanced = {
 
         let plLeft = document.createElement("div");
         let plRight = document.createElement("div");
-        plLeft.className = "playlistswrapper";
-        plLeft.id = "fluxplaylistsLeft";
-        plRight.className = "playlistswrapper";
+        plLeft.className = fluxAdvanced.classPlayListsWrapper;
+        plLeft.id = fluxAdvanced.idFluxPlaylistsLeft;
+        plRight.className = fluxAdvanced.classPlayListsWrapper;
         plRight.id = "fluxplaylistsRight";
-        let contentLeft = document.querySelector("#fluxplaylistsLeft") || plLeft;
+
+
+        let contentLeft = document.querySelector("#"+fluxAdvanced.idFluxPlaylistsLeft) || plLeft;
         let contentRight = document.querySelector("fluxplaylistsRight") || plRight;
         let middel = $("#covercontainer");
         middel.prepend(contentLeft);
@@ -429,8 +456,8 @@ let fluxAdvanced = {
     updateActivePlaylistWithName: function (stationName) {
         console.log("updateActivePlaylistWithNameStart");
 
-        let $l = $(".active_playlist_l");
-        let $r = $(".active_playlist_r");
+        let $l = $("."+fluxAdvanced.classActivePlaylistL);
+        let $r = $("."+fluxAdvanced.classActivePlaylistR);
         let oldActivePlaylistWrapper = $l[0] || $r[0];
         if (oldActivePlaylistWrapper !== undefined) {
             let oldActiveId = parseInt(oldActivePlaylistWrapper.id.split("playlistWrapper")[1]);
@@ -458,13 +485,13 @@ let fluxAdvanced = {
 
         //oldActivePlaylistWrapper.removeClass("active_playlist_l");
         //oldActivePlaylistWrapper.removeClass("active_playlist_r");
-        $l.removeClass("active_playlist_l");
-        $r.removeClass("active_playlist_r");
+        $l.removeClass(fluxAdvanced.classActivePlaylistL);
+        $r.removeClass(fluxAdvanced.classActivePlaylistR);
 
         if (newActiveId < fluxAdvanced.stationDivider) {
-            newActivePlaylistWrapper.addClass("active_playlist_l");
+            newActivePlaylistWrapper.addClass(fluxAdvanced.classActivePlaylistL);
         } else {
-            newActivePlaylistWrapper.addClass("active_playlist_r");
+            newActivePlaylistWrapper.addClass(fluxAdvanced.classActivePlaylistR);
         }
         console.log("changed active playlist to " + newActiveName);
         /*  for (let i = 0; i < fluxAdvanced.locList.length; i++) {
@@ -574,7 +601,7 @@ let fluxAdvanced = {
         return (fluxAdvanced.likes.indexOf(title) > -1);
     },
     getActivePlaylistId: function () {
-        let div = document.querySelector(".active_playlist_l") || document.querySelector(".active_playlist_r");
+        let div = document.querySelector("."+fluxAdvanced.classActivePlaylistL) || document.querySelector("."+fluxAdvanced.classActivePlaylistR);
 
         let divId = null;
         if (div === null || div === undefined) {
@@ -658,7 +685,7 @@ let fluxAdvanced = {
             let newValue = parseInt(item.getAttribute("value")) + 1;
             item.setAttribute("value", newValue.toString());
             let passedTime = $.format.date(newValue * 1000, 'mm:ss');
-            $(item).parent().find(".playedTime")[0].innerText = passedTime;
+            $(item).parent().find("."+fluxAdvanced.classPlayedTime)[0].innerText = passedTime;
             item.setAttribute("value", newValue.toString());
         }
 
@@ -714,6 +741,56 @@ fluxAdvanced.addCss(`   .playlist{
     top: -95px;
    }
 
+
+#fluxplaylistsLeft_short {
+    left: -490px;
+}
+
+.playlistswrapper_short {
+    position: absolute;
+    width: 495px;
+    height: 794px;
+    top: -95px;
+}
+li.playlist_short:first-child {
+    font-size: 16px;
+    box-sizing: border-box;
+    height: 180px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.playedTime_short {
+    text-align: center;
+    position: absolute;
+    z-index: 2;
+    left: 112px;
+    color: yellow;
+    top: 125px !important;
+    font-size: 15px;
+    width: 40px;
+    height: 20px;
+}
+
+.plitem_short {
+    box-sizing: border-box;
+    padding: 5px;
+    position: relative;
+    top: -30px;
+}
+
+.active_playlist_l_short {
+    left: 570px;
+    top: 510px;
+    position: absolute !important;
+}
+
+.active_playlist_r_short {
+    left: -250px;
+    top: 510px;
+    position: absolute !important;
+}
 
 .listContent{
      position:absolute;
