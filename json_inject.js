@@ -127,7 +127,7 @@ let fluxAdvanced = {
                                <span class="track">${item.title}</span>
                                <br>
                                 <!--TODO add like dislike button-->
-                            <div>   <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
+                            <div class="buttons">   <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
                             <span class="like_button liked_text"><i class="far fa-heart"></i></span>
                             <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span>
                             </div></div>
