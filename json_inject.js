@@ -1,12 +1,13 @@
 let fluxAdvanced = {
-    idFluxPlaylistsLeft:  "fluxplaylistsLeft",
-classPlayListsWrapper:  "playlistswrapper",
-classPlaylist:  "playlist",
-classPlayedTime: "playedTime",
-classPLItem: "plitem",
-    classActivePlaylistL : "active_playlist_l_short",
-    classActivePlaylistR : "active_playlist_r_short",
+    idFluxPlaylistsLeft: "fluxplaylistsLeft",
+    classPlayListsWrapper: "playlistswrapper",
+    classPlaylist: "playlist",
+    classPlayedTime: "playedTime",
+    classPLItem: "plitem",
+    classActivePlaylistL: "active_playlist_l_short",
+    classActivePlaylistR: "active_playlist_r_short",
     stationDivider: 0,
+    maxWidth: 234,
     loadPlaylist: function () {
         let lists = document.querySelectorAll("#channelsscroller a");
 //let channels = document.querySelectorAll("#channelsscroller li a");
@@ -85,6 +86,12 @@ classPLItem: "plitem",
         }
         return name;
     },
+    toggle_white:function (pl_item_id){
+        $(document.querySelector("li[playlistid='"+pl_item_id+"']")).find(".youtube_white").toggleClass("youtube_white_hover");
+    },
+    toggle_red:function (pl_item_id){
+        $(document.querySelector("li[playlistid='"+pl_item_id+"']")).find(".youtube_red").toggleClass("youtube_red_hover");
+    },
     // Create the XHR object.
     createCORSRequest: function (method, url) {
         let request = new XMLHttpRequest();
@@ -127,24 +134,52 @@ classPLItem: "plitem",
                             let listItem = document.createElement("li");
                             let item = data.tracks[i];
                             listItem.setAttribute("playlistid", item.id);
-                            listItem.innerHTML = `<div class="${fluxAdvanced.classPLItem}">
-                               <span class="time">${item.time}</span>
-                               <span class="artist">${item.artist}</span> 
+                            listItem.innerHTML = `<span class="time">${item.time}</span><div class="${fluxAdvanced.classPLItem}">
+                                
+                               <span class="artist">
+                                        <span class="likebuttons">  
+                                                
+                                                <span class="like_button liked_text"><i class="far fa-heart"></i></span>
+                                                <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span>
+                                        </span>
+                            ${item.artist}
+                                </span> 
                                <span class="track">${item.title}</span>
                                <br>
                                 <!--TODO add like dislike button-->
-                            <div class="buttons">   <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
-                            <span class="like_button liked_text"><i class="far fa-heart"></i></span>
-                            <span class="dislike_button disliked_text"><i class="far fa-thumbs-down"></i></span>
-                            </div></div>
-                            
+                            </div>
+                           
                             `;
-                            listItem.className = fluxAdvanced.classPlaylist+" ";
+                            listItem.className = fluxAdvanced.classPlaylist + " ";
+                            let youtubelink = document.createElement("span");
+                            youtubelink.className = "youtube_search";
+                            youtubelink.innerHTML = `<span class="youtube_link" title="open search for '${item.artist.trim() + " " + item.title.trim()}' on youtube">
+                            <span class="youtube_white"></span>
+                                <i class='fab fa-youtube youtube_red'></i>
+                                </span>`;
+                            listItem.querySelector(".likebuttons").appendChild(youtubelink)
+
+
+                            $(listItem.querySelector(".youtube_link")).mouseenter(function(event) {
+                                console.log("mouseenter");
+                                fluxAdvanced.toggle_white(item.id);
+                                fluxAdvanced.toggle_red(item.id);
+
+                            }).mouseleave(function() {
+                                console.log("mouseleave");
+                                fluxAdvanced.toggle_white(item.id);
+                                fluxAdvanced.toggle_red(item.id);
+                            }).click(function() {
+                                event.stopImmediatePropagation();
+                                event.preventDefault();
+                                console.log("open youtube in new window");
+                                window.open(encodeURI("https://www.youtube.com/results?search_query="+item.artist.trim() + " " + item.title.trim()));
+                            });
 
                             listItemsList.appendChild(listItem);
                         }
 
-                        let plitems = $(listItemsList).find("."+fluxAdvanced.classPLItem);
+                        let plitems = $(listItemsList).find("." + fluxAdvanced.classPLItem);
                         let time = "00:00:00";
                         let date = "2018-07-15";
                         let playlistTrackId = "";
@@ -172,39 +207,32 @@ classPLItem: "plitem",
                                 meterDiv.max = 300;
                             }
 
-                            let plitems = $(listItemsList.querySelectorAll("."+fluxAdvanced.classPLItem));
-                            $(plitems.find(".hide_station_button")).click(function (event) {
-                                event.stopImmediatePropagation();
-                                event.preventDefault();
-                                console.log("hideStation");
-                                let parent = this.parentElement.parentElement;
-                                let wrapper_div = $(parent.parentElement.parentElement.parentElement)[0];
-                                $(wrapper_div).toggleClass("hidden");
-                                fluxAdvanced.hide_station($(wrapper_div).attr('rel'));
-                            });
-                            $(plitems.find(".dislike_button")).click(function (event) {
+                            let plitems = $(listItemsList.querySelectorAll("." + fluxAdvanced.classPLItem));
+                            let plitems_parent = $(listItemsList.querySelectorAll("." + fluxAdvanced.classPLItem)).parent();
+
+                            $(plitems_parent.find(".dislike_button")).click(function (event) {
 
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
                                 console.log("dislike");
-                                let parent = this.parentElement.parentElement;
-                                $(parent.parentElement).toggleClass("disliked");
-                                $(parent.parentElement).removeClass("liked");
-                                fluxAdvanced.dislike(parent.children[1].innerText + "-" + parent.children[2].innerText);
+                                let parent = this.parentElement;
+                                $(parent.parentElement.parentElement.parentElement).toggleClass("disliked");
+                                $(parent.parentElement.parentElement.parentElement).removeClass("liked");
+                                fluxAdvanced.dislike(parent.parentElement.parentElement.children[0].innerText.trim() + "-" + parent.parentElement.parentElement.children[1].innerText.trim());
                             });
-                            $(plitems.find(".like_button")).click(function (event) {
+                            $(plitems_parent.find(".like_button")).click(function (event) {
 
                                 event.stopImmediatePropagation();
                                 event.preventDefault();
                                 console.log("like");
-                                let parent = this.parentElement.parentElement;
-                                $(parent.parentElement).toggleClass("liked");
-                                $(parent.parentElement).removeClass("disliked");
-                                fluxAdvanced.like(parent.children[1].innerText + "-" + parent.children[2].innerText);
+                                let parent = this.parentElement;
+                                $(parent.parentElement.parentElement.parentElement).toggleClass("liked");
+                                $(parent.parentElement.parentElement.parentElement).removeClass("disliked");
+                                fluxAdvanced.like(parent.parentElement.parentElement.children[0].innerText.trim() + "-" + parent.parentElement.parentElement.children[1].innerText.trim());
                             });
                             playlistTag.prepend($(listItemsList).children());
                             let wrapper_div = playlistTag.parent();
-                            if (wrapper_div[0].className.indexOf("active_playlist") ===-1) {
+                            if (wrapper_div[0].className.indexOf("active_playlist") === -1) {
                                 let movable_playlist_div = wrapper_div.parent();
                                 let playlistswrapper_div = movable_playlist_div.parent();
                                 playlistswrapper_div.prepend(movable_playlist_div);
@@ -218,15 +246,15 @@ classPLItem: "plitem",
                         }
                         for (let i = 0; i < plitems.length; i++) {
                             let item = $(plitems[i]);
-                            let artist = item.children(".artist")[0].innerText;
-                            let track = item.children(".track")[0].innerText;
+                            let artist = item.children(".artist")[0].innerText.trim();
+                            let track = item.children(".track")[0].innerText.trim();
                             let fullTrack = artist + "-" + track;
 
 
-                            if (fluxAdvanced.likes.indexOf(fullTrack) > -1) {
+                            if (fluxAdvanced.isLiked(fullTrack) ) {
                                 item.parent().addClass("liked");
                             }
-                            if (fluxAdvanced.dislikes.indexOf(fullTrack) > -1) {
+                            if (fluxAdvanced.isDisliked(fullTrack) ) {
                                 item.parent().addClass("disliked");
                             }
 
@@ -301,9 +329,9 @@ classPLItem: "plitem",
         let classname = "wrapper";
         if (fluxAdvanced.isActive(i) === "true") {
             if (i < fluxAdvanced.stationDivider) {
-                classname += " "+fluxAdvanced.classActivePlaylistL;
+                classname += " " + fluxAdvanced.classActivePlaylistL;
             } else {
-                classname += " "+fluxAdvanced.classActivePlaylistR
+                classname += " " + fluxAdvanced.classActivePlaylistR
             }
         }
         let v = 0;
@@ -312,16 +340,29 @@ classPLItem: "plitem",
         //  debugger;
         let stationName = fluxAdvanced.getPlaylistName(fluxAdvanced.locList[i]);
         div.innerHTML = `<div class="${classname}" id="playlistWrapper${(i)}" rel="${stationName}" >
-            <meter max="300" min="0" value="240" high="270" low="215" optimum="1802" 
-            style="position: absolute;z-index: 1;width: 100%;height: 4px;"></meter>
-              <div class="${fluxAdvanced.classPlayedTime}"></div>
+                        <div class="station" rel="${stationName}" >${fluxAdvanced.revertConvertedStreamName(fluxAdvanced.locList[i])}  </div>
+            
               <ul class="stationLink" id="playlist_${stationName}" style="padding:0;" rel="${stationName}"></ul>
-              
-                        <div class="station" rel="${stationName}" >${fluxAdvanced.revertConvertedStreamName(fluxAdvanced.locList[i])}</div>
+              <div class="buttons">  
+                             <span class="hide_station_button hide_station_text"><i class="far fa-eye-slash"></i></span>
+                            
+                            </div>
+            <meter max="300" min="0" value="240" high="270" low="215" optimum="1802" 
+            style="position: absolute;z-index: 1;width: ${fluxAdvanced.maxWidth}px;height: 4px;bottom:0;"></meter>
+              <div class="${fluxAdvanced.classPlayedTime}"></div>  
                         <!--div style="width:15px;height:15px;background:red;position:absolute;right:0;top:0;z-index:9999;" onclick="alertme()">hide<div>
                         <div style="width:15px;height:15px;background:red;" onclick="function(){alert(1);}">show<div-->
           </div>`;
 
+        $($(div).find(".hide_station_button")).click(function (event) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            console.log("hideStation");
+            let parent = this.parentElement;
+            let wrapper_div = $(parent.parentElement)[0];
+            $(wrapper_div).toggleClass("hidden");
+            fluxAdvanced.hide_station($(wrapper_div).attr('rel'));
+        });
 
         return div;
     },
@@ -345,28 +386,30 @@ classPLItem: "plitem",
     },
     setAudioqualityToHigh: function () {
         let quality = document.querySelector("#quality a");
-        if (quality.innerText === "64") {
-            quality.click();
-            quality.click();
-        } else if (quality.innerText === "128") {
-            quality.click();
+        if (quality != null) {
+            if (quality.innerText === "64") {
+                quality.click();
+                quality.click();
+            } else if (quality.innerText === "128") {
+                quality.click();
+            }
         }
     },
     initiateView: function () {
-        if($("body").width() > 1400){
-        fluxAdvanced.idFluxPlaylistsLeft = "fluxplaylistsLeft";
+        if ($("body").width() > 1400) {
+            fluxAdvanced.idFluxPlaylistsLeft = "fluxplaylistsLeft";
             fluxAdvanced.classPlayListsWrapper = "playlistswrapper";
             fluxAdvanced.classPlaylist = "playlist";
-            fluxAdvanced.classPlayedTime ="playedTime";
-            fluxAdvanced.classPLItem ="plitem";
+            fluxAdvanced.classPlayedTime = "playedTime";
+            fluxAdvanced.classPLItem = "plitem";
             fluxAdvanced.classActivePlaylistL = "active_playlist_l";
             fluxAdvanced.classActivePlaylistR = "active_playlist_r";
-        }else{
+        } else {
             fluxAdvanced.idFluxPlaylistsLeft = "fluxplaylistsLeft_short";
             fluxAdvanced.classPlayListsWrapper = "playlistswrapper_short";
             fluxAdvanced.classPlaylist = "playlist_short";
-            fluxAdvanced.classPlayedTime ="playedTime_short";
-            fluxAdvanced.classPLItem ="plitem_short";
+            fluxAdvanced.classPlayedTime = "playedTime_short";
+            fluxAdvanced.classPLItem = "plitem_short";
             fluxAdvanced.classActivePlaylistL = "active_playlist_l_short";
             fluxAdvanced.classActivePlaylistR = "active_playlist_r_short";
             window.resizeTo(1300, 768);
@@ -385,7 +428,7 @@ classPLItem: "plitem",
         plRight.id = "fluxplaylistsRight";
 
 
-        let contentLeft = document.querySelector("#"+fluxAdvanced.idFluxPlaylistsLeft) || plLeft;
+        let contentLeft = document.querySelector("#" + fluxAdvanced.idFluxPlaylistsLeft) || plLeft;
         let contentRight = document.querySelector("fluxplaylistsRight") || plRight;
         let middel = $("#covercontainer");
         middel.prepend(contentLeft);
@@ -456,8 +499,8 @@ classPLItem: "plitem",
     updateActivePlaylistWithName: function (stationName) {
         console.log("updateActivePlaylistWithNameStart");
 
-        let $l = $("."+fluxAdvanced.classActivePlaylistL);
-        let $r = $("."+fluxAdvanced.classActivePlaylistR);
+        let $l = $("." + fluxAdvanced.classActivePlaylistL);
+        let $r = $("." + fluxAdvanced.classActivePlaylistR);
         let oldActivePlaylistWrapper = $l[0] || $r[0];
         if (oldActivePlaylistWrapper !== undefined) {
             let oldActiveId = parseInt(oldActivePlaylistWrapper.id.split("playlistWrapper")[1]);
@@ -501,7 +544,7 @@ classPLItem: "plitem",
               //div.addClass("playlistWrapper" + newActiveId + "_" + (i + 1));
           }
         */
-        document.location = fluxAdvanced.prefix() + "://www.fluxfm.de/stream/#" + fluxAdvanced.revertConvertedStreamName(newActivePlaylistWrapper[0].getAttribute('rel')) + "/play";
+        document.location = "https://www.fluxfm.de/stream/#" + fluxAdvanced.revertConvertedStreamName(newActivePlaylistWrapper[0].getAttribute('rel')) + "/play";
 
         console.log("updateActivePlaylistWithNameEnd");
     },
@@ -601,7 +644,7 @@ classPLItem: "plitem",
         return (fluxAdvanced.likes.indexOf(title) > -1);
     },
     getActivePlaylistId: function () {
-        let div = document.querySelector("."+fluxAdvanced.classActivePlaylistL) || document.querySelector("."+fluxAdvanced.classActivePlaylistR);
+        let div = document.querySelector("." + fluxAdvanced.classActivePlaylistL) || document.querySelector("." + fluxAdvanced.classActivePlaylistR);
 
         let divId = null;
         if (div === null || div === undefined) {
@@ -624,7 +667,7 @@ classPLItem: "plitem",
         if (list.children().length > 0) {
             let artist = list.find(".plitem").find(".artist")[0];
             if (artist !== null && artist !== undefined) {
-                string = artist.innerText;
+                string = artist.innerText.trim();
             } else {
                 string = "Kein Artist gefunden!";
             }
@@ -644,7 +687,7 @@ classPLItem: "plitem",
         if (list.children().length > 0) {
             let track = list.find(".plitem").find(".track")[0];
             if (track !== null && track !== undefined) {
-                string = track.innerText;
+                string = track.innerText.trim();
             } else {
                 string = "Kein Track gefunden!";
             }
@@ -684,9 +727,30 @@ classPLItem: "plitem",
             let item = list[i];
             let newValue = parseInt(item.getAttribute("value")) + 1;
             item.setAttribute("value", newValue.toString());
+            let max_width = fluxAdvanced.maxWidth;
+            let px = parseFloat(300 / max_width);
+
+
+            let pos = (max_width / 300) * newValue;
+            if (newValue < 300) {
+                pos = (max_width / 300) * newValue;
+            }
+            if (newValue >= 250) {
+
+                pos = max_width - 40;
+            }
+            /*if (pos < 40) {
+                pos = 40;
+            }*/
+
             let passedTime = $.format.date(newValue * 1000, 'mm:ss');
-            $(item).parent().find("."+fluxAdvanced.classPlayedTime)[0].innerText = passedTime;
+            $(item).parent().find("." + fluxAdvanced.classPlayedTime)[0].innerText = passedTime;
+
+            $(item).parent().find("." + fluxAdvanced.classPlayedTime)[0].style.left = pos + "px";
+
             item.setAttribute("value", newValue.toString());
+
+
         }
 
     },
@@ -706,8 +770,8 @@ classPLItem: "plitem",
         return index;
     }
 };
-
 $(document).ready(function () {
+
     console.log("start");
     setTimeout(1000);
 
@@ -717,6 +781,7 @@ $(document).ready(function () {
     fluxAdvanced.setAudioqualityToHigh();
 
     fluxAdvanced.updatePlaylists(4);
+
 
     setInterval(function () {
         fluxAdvanced.updatePlaylists(1);
@@ -848,15 +913,17 @@ li.playlist_short:first-child {
     height: 150px;
     margin: 0;
 }
-  .station {
+ .station {
     text-align: center;
     color: yellow;
     font-size: 15px;
     position: absolute;
     z-index: 2;
-    height: 4px;
-    top: 125px;
-    left: 5px;
+    height: 17px;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    border-bottom: 1px solid darkgray;
 }
 
 .playedTime {
@@ -865,7 +932,7 @@ li.playlist_short:first-child {
     z-index: 2;
     left: 190px;
     color: yellow;
-    top: 125px !important;
+    bottom: 3px !important;
     font-size: 15px;
     width: 40px;
     height: 20px;
@@ -899,9 +966,9 @@ li.playlist_short:first-child {
     text-align: center;
 }
   li.playlist:first-child .plitem span {
-      position: relative;
+      position: initial;
       text-align: center;
-      vertical-align: middle;
+      
   }
   /*if playlist 1 3 5 7 9 is active*/
    .playlistWrapper1_1,
@@ -940,17 +1007,17 @@ li.playlist_short:first-child {
      color:gray !important;
    }
    .like_button{
-   top:10px;
-   left:70px;
+   
    }
    .dislike_button{
-   top:10px;
-   left:70px;
+  
    }
-   .hide_station_button{
-   top:10px;
-   left:70px;
-   }
+   .hide_station_button {
+    top: -3px;
+    left: -15px;
+    position: relative;
+    z-index: 2;
+    }
    .colcontainer {
     text-align: center;
     margin-top: 6px;
@@ -1017,4 +1084,60 @@ meter::-webkit-meter-even-less-good-value {
 meter::-moz-meter-sub-sub-optimum {
   background-color: red;
 }
+
+
+
+.wrapper span.time {
+      position: inherit;
+    font-size: 0.7em;
+    left: 2px;
+}
+li.playlist:first-child span.time  {
+    top: 0px;
+    position: absolute;
+    font-size: 0.7em;
+    left: 1px;
+}
+.buttons{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color:#fff;
+}
+.likebuttons{
+    right: 5px;
+    top: 5px;
+    color:#fff;
+}
+.youtube_link{
+    width: 20px;
+    height: 20px;
+    
+    position: relative !important;
+    text-decoration:none;
+}
+.youtube_white{
+    width: 7px;
+    height: 7px;
+    background: #282828;
+    position: absolute !important;
+    z-index: 1;
+    top: 7px;
+    left: 8px;
+}
+.youtube_white_hover{
+    background: white !important;
+    
+}
+.youtube_red{
+    color: white;
+    position: relative;
+    z-index: 2;
+    
+}
+.youtube_red_hover{
+    color: red !important;
+    
+}
+
 `);

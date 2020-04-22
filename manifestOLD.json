@@ -12,7 +12,6 @@
     "http://www.fluxfm.de/*",
     "https://www.fluxfm.de/*",
     "http://fluxmusic.io/*",
-    "https://fluxmusic.io/*",
     "webRequest",
     "webRequestBlocking",
 
@@ -25,8 +24,8 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.fluxfm.de/stream/*","https://fluxmusic.io/api/*","http://www.fluxfm.de/stream/*","http://fluxmusic.io/api/*"],
-      "js" : ["jquery-2.2.1.min.js","jq.tmpl-1.0.4.js","jquery.jplayer-2.9.2.min.js","jquery-dateFormat.min.js","json_inject.js"]
+      "matches": ["http://www.fluxfm.de/stream/*","https://www.fluxfm.de/stream/*","http://fluxmusic.io/api/*","https://fluxmusic.io/api/*"],
+      "js" : ["jquery-2.2.1.min.js","jq.tmpl-1.0.4.js","jquery.jplayer-2.9.2.min.js","jquery-dateFormat.min.js","player.js","json_inject.js"]
     }
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
