@@ -1,14 +1,14 @@
 {
   "name": "fluxfm playlists",
-  "description": "fluxfm see all playlists at once.like and dislike songs BETA",
-  "version": "2.3.2",
-  "version_name": "2.3.2 beta",
+  "description": "fluxfm see all playlists at once.like and dislike songs and oneclick youtube search BETA",
+  "version": "2.4.0",
+  "version_name": "2.4.0 beta",
   "browser_action": {
     "default_icon": "icon1.png",
     "default_title": "fluxfm playlists"
   },
   "permissions": [
-    "alarms", "tabs", "bookmarks",
+
     "http://www.fluxfm.de/*",
     "https://www.fluxfm.de/*",
     "http://fluxmusic.io/*",

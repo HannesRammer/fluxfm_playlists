@@ -1,6 +1,6 @@
 // match pattern for the URLs to redirect
 var pattern = "*://www.fluxfm.de/stream/player.js*";
-debugger;
+
 // redirect function
 // returns an object with a property `redirectURL`
 // set to the new URL

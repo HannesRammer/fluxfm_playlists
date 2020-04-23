@@ -781,7 +781,7 @@ $(document).ready(function () {
     fluxAdvanced.setAudioqualityToHigh();
 
     fluxAdvanced.updatePlaylists(4);
-
+    $(".colcontainer .col:nth-child(2)").css('position','absolute').css('visibility','hidden');
 
     setInterval(function () {
         fluxAdvanced.updatePlaylists(1);
